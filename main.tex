@@ -311,7 +311,7 @@ of cooperations by defining the most permissive dynamics.
 On the other hand, the qualitative modeling of BRNs has been widely addressed using Ren\'e Thomas'
 formalism, which is also depicted.
 A translation from PH to Thomas' representation of BRNs is finally presented.
-It first relies on an analysis of all regulations to infer the Interaction Graph, then the possible parametrizations.
+It relies on an analysis of all regulations to infer the Interaction Graph, then the possible parametrizations.
 
 
 
@@ -338,13 +338,12 @@ component at one level) triggered by the hit of at most one other “process” 
 This particular structure makes the formal analysis of BRNs with hundreds of components tractable \cite{PMR12-MSCS}.
 PH is suitable, according to the precision of this information, to model BRNs with different levels of abstraction by capturing the most general dynamics.
 
-In \cite{FPIMR12-CMSB} we show that starting from one PH model,
+In \cite{FPIMR12-CMSB} we showed that starting from one PH model,
 it is possible to find the underlying interactions, then the underlying Thomas' parameters.
 This method relies on an exhaustive search of the interactions between components of the PH model,
 and an enumeration of the (possibly large) nesting set of valid parameters,
 so that the resulting dynamics are ensured to respect the PH dynamics, \ie no spurious transitions are made possible.
-
-The first benefit of our approach is that it makes possible the construction refining of BRNs with a partial and progressively brought knowledge in PH, while being able to export such models in the Thomas' framework.
+The first benefit of this approach is that it makes possible the construction refining of BRNs with a partial and progressively brought knowledge in PH, while being able to export such models in the Thomas' framework.
 Our second contribution is to enhance the knowledge of the formal links between both modelings.
 The method can be applied to large BRNs (up to 40 components).
 
@@ -370,7 +369,7 @@ called respectively \emph{hitter}, \emph{target} and
 \emph{bounce} of the action.
 
 \begin{definition}[Process Hitting]\label{def:PH}
-A \emph{Process Hitting} is a triple $(\PHs,\PHl,\PHa)$:
+A \emph{Process Hitting} is a triple $(\PHs,\PHl,\PHa)$, where:
 \begin{itemize}
 \item $\PHs = \{a,b,\dots\}$ is the finite set of \emph{sorts};
 \item $\PHl = \prod_{a\in\PHs} \PHl_a$ is the set of states with $\PHl_a = \{a_0,\dots,a_{l_a}\}$
@@ -401,12 +400,13 @@ independent hits from $b_1$ and $c_1$.
 The same cooperative sort is used to make $b_0$ and $c_0$ cooperate to hit $a_1$ and make it bounce to $a_0$.
 
 \begin{example}
-\pref{fig:runningPH} represents a PH $(\PHs,\PHl,\PHa)$ with especially:
-$\PHs = \{a,b,c,bc\}$,
-$\PHl_a = \{a_0,a_1,a_2\}$,
-$\PHl_b = \{b_0, b_1\}$,
-$\PHl_c = \{c_0, c_1\}$ and
-$\PHl_{bc} = \{bc_{00}, bc_{01}, bc_{10}, bc_{11}\}$.
+\pref{fig:runningPH} represents a PH $(\PHs,\PHl,\PHa)$ with especially $\PHs = \{a,b,c,bc\}$, and:
+\begin{align*}
+\PHl_a &= \{a_0,a_1,a_2\},&
+\PHl_b &= \{b_0, b_1\},\\
+\PHl_{bc} &= \{bc_{00}, bc_{01}, bc_{10}, bc_{11}\},&
+\PHl_c &= \{c_0, c_1\}.
+\end{align*}
 This example models a BRN where the component $a$ has three qualitative levels, components $b$ and $c$ are Boolean and $bc$ is a cooperative sort.
 In this BRN, $a$ inhibits $b$ at level $2$ while $b$ and $c$ activate $a$ with independent actions (e.g. $\PHfrappe{b_0}{a_2}{a_1}$)
 or through the cooperative sort $bc$ (e.g. $\PHfrappe{bc_{11}}{a_1}{a_2}$).
@@ -500,16 +500,21 @@ $l_a$ denotes the maximum level of a component $a$.
 
 \begin{definition}[Interaction Graph]
 \label{def:ig}
-An \emph{Interaction Graph} (IG) is a triple $(\Gamma, E_+, E_-)$ where $\Gamma$ is a finite number of \emph{components},
-and $E_+$ (\resp $E_-$) $\subset \{a \xrightarrow{t} b \mid a, b \in \Gamma \wedge t \in [1; l_a]\}$
-is the set of positive (\resp negative) \emph{regulations} between two nodes, labeled with a \emph{threshold}.
-A regulation from $a$ to $b$ is unique.
+An \emph{Interaction Graph} (IG) $(\Gamma, E_+, E_-)$ is a triple where:
+\begin{itemize}
+  \item $\Gamma$ is a finite number of \emph{components},
+  \item $E_+$ (\resp $E_-$) $\subset \{a \xrightarrow{t} b \mid a, b \in \Gamma \wedge t \in [1; l_a]\}$
+    is the set of positive (\resp negative) \emph{regulations} between two nodes, labeled with a \emph{threshold}.
+\end{itemize}
+A regulation from $a$ to $b$ is unique, \ie if $a \xrightarrow{t} b \in E_+ \text{ (resp. $E_-$)}$,
+then there is no regulation $a \xrightarrow{t'} b$ in $E_- \text{ (resp. $E_+$)}$,
+and no other regulation $a \xrightarrow{t''} b$ in $E_+ \text{ (resp. $E_-$)}$ with $t'' \not= t$.
 \end{definition}
 
 \noindent
 For an interaction of the IG to take place, the expression level of its head component has to be higher than its threshold; otherwise, the opposite influence is expressed.
-For any component $a \in \Gamma$, $\GRNreg{a} = \{ b\in\Gamma\mid \exists b\xrightarrow t a\in E_+\cup E_- \}$
-is the set of its regulators.
+For any component $a \in \Gamma$, $\GRNreg{a}$ is the set of its regulators:
+$$\GRNreg{a} = \{ b\in\Gamma\mid \exists b\xrightarrow t a\in E_+\cup E_- \} \enspace.$$
 A \emph{state} $s$ of an IG $(\Gamma, E_+, E_-)$ is an element in $\prod_{a \in \Gamma} [0;l_a]$
 and $\GRNget{s}{a}$ refers to the level of component $a$ in $s$.
 
@@ -520,6 +525,8 @@ Let $x \in \Gamma$ be a given component and $A$ (\resp $B$) $\subset \GRNreg{x}$
 such that $A \cup B = \GRNreg{x}$ and $A \cap B = \emptyset$.
 The discrete \emph{parameter} $K_{x,A,B} = [i; j]$ is a non-empty interval so that $0 \leq i \leq j \leq l_x$.
 With regard to the dynamics, $x$ will tend towards $K_{x,A,B}$ in the states where its activators (\resp inhibitors) are the regulators in set $A$ (\resp $B$).
+
+\noindent
 The complete map $K = (K_{x,A,B})_{x,A,B}$ of discrete parameters for an IG is called a \emph{parametrization} of this IG.
 \end{definition}
 
@@ -527,15 +534,16 @@ At last, dynamics are defined in BRN in a unitary and asynchronous way:
 from a given state $s$, a transition to another state $s'$ is possible provided that only one component $a$ will evolve of exactly one level towards $K_{a,A,B}$, where $A$ (\resp $B$) is the set of activators (\resp inhibitors) of $a$ in $s$.
 
 \begin{example}
-\pref{fig:runningBRN}(left) represents an Interaction Graph $(\Gamma,E_+,E_-)$ with
-$\Gamma = \{a, b, c\}$,
-$E_+ = \{b \xrightarrow{1} a, c \xrightarrow{1} a\}$ and
-$E_- = \{a \xrightarrow{2} b\}$;
-hence $\GRNreg{a} = \{b, c\}$.
+\pref{fig:runningBRN}(left) represents the Interaction Graph $(\Gamma,E_+,E_-)$ with $\Gamma = \{a, b, c\}$, and:
+\begin{align*}
+E_+ &= \{b \xrightarrow{1} a, c \xrightarrow{1} a\}&
+E_- &= \{a \xrightarrow{2} b\} \enspace.
+\end{align*}
+In particular, $\GRNreg{a} = \{b, c\}$.
 \pref{fig:runningBRN}(right) gives a possible parametrization on this IG.
 In this BRN, the following transitions are possible:
-$\GRNetat{a_0, b_1, c_1} \rightarrow \GRNetat{a_1, b_1, c_1} \rightarrow \GRNetat{a_2, b_1, c_1} \rightarrow
-\GRNetat{a_2, b_0, c_1} \rightarrow \GRNetat{a_1, b_0, c_1}$,
+$$\GRNetat{a_0, b_1, c_1} \rightarrow \GRNetat{a_1, b_1, c_1} \rightarrow \GRNetat{a_2, b_1, c_1} \rightarrow
+\GRNetat{a_2, b_0, c_1} \rightarrow \GRNetat{a_1, b_0, c_1},$$
 where $a_i$ is the component $a$ at level $i$.
 \end{example}
 
@@ -577,37 +585,42 @@ E_+$.
 
 \section{BRN Inference}
 
-In order to infer a complete BRN, one has to find the Interaction Graph (IG) first, as some constraints on the parametrization rely on it.
+This section focuses on the inference of a complete BRN with Thomas' parameters from a given PH.
+
+In order to infer a BRN, one has to find the Interaction Graph (IG) first, as some constraints on the parametrization rely on it.
 Inferring the IG is an abstraction step which consists, from atomistic actions of a PH, in determining the global influence of every component on each of its successors.
 
-Given the IG inferred from a PH as presented in the previous section, one can find the discrete parameters that model the behavior of the studied PH using the method presented in the following.
+Then, given the IG inferred from a PH, one can find the discrete parameters that model the behavior of the studied PH.
 As some parameters may remain undetermined, another step allows to enumerate all parametrizations compatible with the inferred parameters.
 
 %\input{parts/infer-ig}
 \subsection{Interaction Graph inference}\label{ssec:infer-IG}
-This step assumes that the studied PH defines two types of sorts: the sorts corresponding to BRN components, which will appear in the IG, and the cooperative sorts.
-The identification of these two sets of sorts relies on the observation of their possible behavior, which in both cases observe some rules.
+This step assumes that the studied PH defines two types of sorts: the sorts corresponding to BRN components, which will appear in the IG, and the cooperative sorts, as defined in \pref{ssec:PH}.
+The identification of these two sets of sorts relies on the observation of their possible behavior, which in both cases observe some rules, and can be automated.
 
-Inferring global influences of a predecessor $b$ on a component $a$ requires to find “local influences” from this predecessor first, by considering a given state and changing only the active process of $b$.
+Inferring global influences of a predecessor $b$ on a component $a$ requires to find “local influences” from this predecessor first, by considering a given state of the PH and changing only the active process of $b$.
 The aim is to compare the set of processes towards which the component $a$ will evolve, for each active process of $b$, leaving the active process of all the other sorts unchanged.
-Indeed, if after increasing the level of $b$ (\ie activating a higher process of $b$) we notice that $a$ tends to reach a higher (\resp lower) level, we can then deduce that $b$ activates (\resp inhibits) $a$ in this selected state.
+Indeed, if after increasing the level of $b$, \ie activating a higher process of $b$, we notice that $a$ tends to reach a higher (\resp lower) level, we can then deduce that $b$ activates (\resp inhibits) $a$ in this selected state.
 Of course, only predecessors of $a$ have to be considered.
 
 This has to be observed on every possible state in order to infer a local influence.
 Indeed, if all local influences of $b$ on $a$ are the same (activations or inhibitions) we can deduce that the global influence of $b$ on $a$ is also the same, and the related threshold is the lowest level of $b$ for which we can observe such an influence.
-An unsigned edge with no threshold is inferred if two different local influences are found, or in particular cases (when a behavior cannot be represented as a BRN).
+An unsigned edge with no threshold is inferred if two different local influences are found, or in other particular cases (when a behavior cannot be represented as a BRN).
 
 \begin{example}
-Consider, in the PH of \pref{fig:runningPH}, the sub-state $\PHstate{b_0, c_0, bc_{00}}$ of predecessors of $a$.
-In this sub-state, $a$ can be hit by the following actions: $\{\PHfrappe{b_0}{a_2}{a_1}, \PHfrappe{c_0}{a_2}{a_1}, \PHfrappe{bc_{00}}{a_1}{a_0}\}$.
+Consider, in the PH of \pref{fig:runningPH}, the sub-state $\sigma = \PHstate{b_0, c_0, bc_{00}}$ of predecessors of $a$.
+In this sub-state, $a$ can be hit by the following actions:
+$$\PHh_a^\sigma = \{\PHfrappe{b_0}{a_2}{a_1}, \PHfrappe{c_0}{a_2}{a_1}, \PHfrappe{bc_{00}}{a_1}{a_0}\} \enspace.$$
 Thus, if $a$ evolves, it will eventually reach process $a_0$.
-But if a higher process of $b$ is activated, that is, $b_1$ instead of $b_0$, thus considering the sub-state $\PHstate{b_1, c_0, bc_{10}}$,
-then $a$ can be hit by the two following actions: $\{\PHfrappe{b_1}{a_0}{a_1}, \PHfrappe{c_0}{a_2}{a_1}\}$,
+But if a higher process of $b$ is activated, that is, $b_1$ instead of $b_0$, thus considering the sub-state $\sigma' = \PHstate{b_1, c_0, bc_{10}}$,
+then $a$ can be hit by the two following actions:
+$$\PHh_a^{\sigma'} = \{\PHfrappe{b_1}{a_0}{a_1}, \PHfrappe{c_0}{a_2}{a_1}\} \enspace,$$
 and will eventually reach process $a_1$.
 
 Therefore, in this sub-state of predecessors of $a$, $b$ locally activates $a$.
 Furthermore, if this analysis is carried for all possible sub-states of predecessors of $a$, only local activations are found,
 thus giving: $b \xrightarrow{1} a \in E_+$.
+
 After applying this method to all pairs of influence, the IG given in \pref{fig:runningBRN} is inferred.
 \end{example}
 
@@ -619,11 +632,11 @@ We suppose in the following that the considered PH is well-formed for parameters
 and in each sort, all processes activating (\resp inhibiting) another component share the same behavior.
 Let $K_{a,A,B}$ be the parameter we want to infer for a given component $a \in \Gamma$,
 and $A \subset \GRNreg{a}$ (\resp $B \subset \GRNreg{a}$) a set of its activators (\resp inhibitors).
-This inference, as for the IG inference, relies on the search of focal processes of the component for the given configuration of its regulators.
+This inference, as for the IG inference, relies on the search of processes of $a$ towards which it will eventually evolve for the given configuration $A,B$ of its regulators.
 
 For each sort $b \in \GRNreg{a}$, we define a context that contains all processes of $b$ activating (\resp inhibiting) $a$ if $b \in A$ (\resp $B$).
-From all contexts of all predecessors of $a$, we create a global context that represents the configuration $A,B$ (including the cooperative sorts involved).
-The parameter $K_{a,A,B}$ specifies towards which values $a$ eventually evolves as long as this context holds, which is precisely given by the set of focal processes.
+From all contexts of all predecessors of $a$, we create a global context $C_{A,B}$ that represents the configuration $A,B$ (including the cooperative sorts involved).
+The parameter $K_{a,A,B}$ specifies towards which values $a$ eventually evolves as long as the configuration $A,B$ holds, which can now be computed by considering the dynamics of $a$ in the global context $C_{A,B}$.
 
 \begin{example}
 Consider the PH of \pref{fig:runningPH}, from which the IG of \pref{fig:runningBRN} is inferred.
@@ -647,12 +660,12 @@ Furthermore, ASP finds a particularly interesting application in the research of
 %\input{parts/example}
 \subsection{Implementation}\label{ssec:examples}
 The inference method described in this paper has been implemented as a tool named \texttt{ph2thomas}, as part of
-\textsc{Pint}\footnote{Available at \url{http://process.hitting.free.fr}}, which gathers PH related
+\textsc{Pint}\footnote{Available at \url{http://process.hitting.free.fr}}, a library gathering PH related
 tools.
 Our implementation mainly consists of ASP programs that are solved using Clingo\footnote{Available
 at \url{http://potassco.sourceforge.net}}.
 
-In the previous sections, we illustrate our results on a toy example considered as a very small network.
+In the previous sections, the methods and results are illustrated on a toy example considered as a very small network containing 3 components ($a$, $b$ and $c$).
 But our approach can also successfully handle large PH models of BRNs found in the literature
 such as an ERBB receptor-regulated G1/S transition model from \cite{Sahin09} which contains 20
 components, and a T-cells receptor model from \cite{Klamt06} which contains 40
