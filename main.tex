@@ -3,7 +3,46 @@
 \usepackage[english]{babel}
 \usepackage[T1]{fontenc}
 
-\input{epig-macros}
+%\input{epig-macros}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{helvet}
+
+\pagestyle{empty}
+\newcommand{\smallitem}{\vspace*{-2mm}\item}
+\renewcommand{\baselinestretch}{0.95}
+\marginparwidth 0pt 
+\evensidemargin 2.2cm 
+\oddsidemargin 1.8cm 
+\topmargin 0cm 
+\textwidth 12cm 
+\textheight 19cm
+
+\makeatletter
+\renewcommand{\fnum@figure}{\textbf{\fontsize{10}{10}\selectfont\sffamily\figurename~\thefigure}}
+\renewcommand{\fnum@table}{\textbf{\fontsize{10}{10}\selectfont\sffamily\tablename~\thetable}}
+\makeatother
+
+
+\newcommand{\auteur}[1]{
+        \begin{center}
+        {#1}
+        \end{center}
+}
+
+\newcommand{\titre}[1]{
+        \begin{center}
+        {\large\bfseries \sffamily {#1}}
+        \end{center}
+}
+
+\newcommand{\affiliation}[1]{
+        \noindent
+        {\small{#1}}
+}
+
+
+
 \usepackage{hyperref}
 \usepackage{amsmath}  % Maths
 \usepackage{amsfonts} % Maths
