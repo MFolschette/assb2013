@@ -363,7 +363,7 @@ Besides continuous models of physicists, often designed through systems of ordin
 differential equations, a discrete modeling approach was initiated by René Thomas in 1973
 \cite{Thomas73} allowing the representation of the different levels of a component, such as concentration or expression levels, as integer values.
 Nevertheless, these dynamics can be precisely established only with regard to some kind of ``focal points'', related to as Thomas' parameters, indicating the evolutionary tendency of each component.
-This modeling has motivated numerous works (e.g., \cite{RiCo07,Naldi09,Siebert06,Ahmad08}),
+This modeling has motivated numerous works (see \cite{RiCo07,Naldi09,Siebert06,Ahmad08}),
 and other approaches related to our work, which rely on temporal logic~\cite{Khalis09} and constraint programming~\cite{20646302,DBLP:conf/ipcat/CorblinFTCT12},
 aim at determining models consistent with partial data on the regulatory structure and dynamics.
 While the formal checking of dynamical properties is often limited to small networks because of the
@@ -432,7 +432,7 @@ expressed in PH by building a \emph{cooperative sort}.
 defined with 4 processes (one for each sub-state of the presence of processes $b_1$ and $c_1$).
 For the sake of clarity, processes of $bc$ are indexed using the sub-state they represent.
 Hence, $bc_{01}$ represents the sub-state $\PHstate{b_0,c_1}$, and so on.
-Each process of sort $b$ and $c$ hit $bc$ to make it bounce to the process reflecting the status of the sorts $b$
+Each process of sort $b$ and $c$ hit $bc$, which makes it bounce to the process reflecting the status of the sorts $b$
 and $c$ (e.g., $\PHfrappe{b_1}{bc_{00}}{bc_{10}}$ and $\PHfrappe{b_1}{bc_{01}}{bc_{11}}$).
 Then, to represent the cooperation between processes $b_1$ and $c_1$,
 the process $bc_{11}$ hits $a_1$ to make it bounce to $a_2$ instead of
@@ -440,7 +440,7 @@ independent hits from $b_1$ and $c_1$.
 The same cooperative sort is used to make $b_0$ and $c_0$ cooperate to hit $a_1$ and make it bounce to $a_0$.
 
 \begin{example}
-\pref{fig:runningPH} represents a PH $(\PHs,\PHl,\PHa)$ with especially $\PHs = \{a,b,c,bc\}$, and:
+\pref{fig:runningPH} represents a PH $(\PHs,\PHl,\PHa)$ with $\PHs = \{a,b,c,bc\}$, and:
 \begin{align*}
 \PHl_a &= \{a_0,a_1,a_2\},&
 \PHl_b &= \{b_0, b_1\},\\
@@ -531,8 +531,15 @@ Actions targeting processes of $a$ are in thick lines.
 \end{figure}
 \end{example}
 
+A Process Hitting model can be obtained from the literature or from a BRN as described in \cite{PMR10-TCSB}.
+In both methods, the identification of interactions allows to define the set of actions leading to the desired dynamics,
+but an under- or over-approximation can also be built if the interactions are not precisely known (by adding or removing all actions allowing a given behavior).
+This can be used especially in cases where a cooperative sort cannot be built because of a lack of information.
+
 %\input{parts/grn}
 \subsection{Thomas' modeling}
+\label{ssec:BRN}
+
 Thomas' formalism, here inspired by \cite{Richard06,BernotSemBRN}, lies on two complementary descriptions of the system.
 First, the \emph{Interaction Graph} (IG) models the structure of the system by defining the components' mutual influences.
 Its nodes represent components, while its edges labeled with a threshold stand for either positive or negative interactions (\pref{def:ig});
@@ -559,19 +566,20 @@ A \emph{state} $s$ of an IG $(\Gamma, E_+, E_-)$ is an element in $\prod_{a \in 
 and $\GRNget{s}{a}$ refers to the level of component $a$ in $s$.
 
 The specificity of Thomas' approach lies in the use of discrete \emph{parameters} to represent focal level intervals (\pref{def:param}).
+The use of intervals instead of single values for parameters allows a wider range of expressiveness, by allowing behaviors impossible to define with single values.
 
 \begin{definition}[Discrete parameter $K_{x,A,B}$ and Parametrization $K$]\label{def:param}
 Let $x \in \Gamma$ be a given component and $A$ (\resp $B$) $\subset \GRNreg{x}$ a set of its \emph{activators} (\resp \emph{inhibitors}),
 such that $A \cup B = \GRNreg{x}$ and $A \cap B = \emptyset$.
 The discrete \emph{parameter} $K_{x,A,B} = [i; j]$ is a non-empty interval so that $0 \leq i \leq j \leq l_x$.
-With regard to the dynamics, $x$ will tend towards $K_{x,A,B}$ in the states where its activators (\resp inhibitors) are the regulators in set $A$ (\resp $B$).
+With regard to the dynamics, $x$ will tend towards $K_{x,A,B}$ in the states where its activators (\resp inhibitors) are the regulators in set $A$ (\resp $B$), except in the case where $x \in K_{x,A,B}$ for which it does not evolve.
 
 \noindent
 The complete map $K = (K_{x,A,B})_{x,A,B}$ of discrete parameters for an IG is called a \emph{parametrization} of this IG.
 \end{definition}
 
 At last, dynamics are defined in BRN in a unitary and asynchronous way:
-from a given state $s$, a transition to another state $s'$ is possible provided that only one component $a$ will evolve of exactly one level towards $K_{a,A,B}$, where $A$ (\resp $B$) is the set of activators (\resp inhibitors) of $a$ in $s$.
+from a given state $s$, a transition to another state $s'$ is possible provided that only one component $a$ will evolve of exactly one level towards $K_{a,A,B}$, where $A$ (\resp $B$) is the set of activators (\resp inhibitors) of $a$ in $s$, provided that $a \not\in K_{a,A,B}$ in $s$.
 
 \begin{example}
 \pref{fig:runningBRN}(left) represents the Interaction Graph $(\Gamma,E_+,E_-)$ with $\Gamma = \{a, b, c\}$, and:
@@ -637,6 +645,8 @@ As some parameters may remain undetermined, another step allows to enumerate all
 \subsection{Interaction Graph inference}\label{ssec:infer-IG}
 This step assumes that the studied PH defines two types of sorts: the sorts corresponding to BRN components, which will appear in the IG, and the cooperative sorts, as defined in \pref{ssec:PH}.
 The identification of these two sets of sorts relies on the observation of their possible behavior, which in both cases observe some rules, and can be automated.
+For instance, given the definition of cooperative sorts, if the actions hitting a sort lead to a unique fixed point for any configuration of its predecessors, then we can deduce that this sort is a cooperative sort.
+Conversely, because of the BRN dynamics explained in \pref{ssec:BRN}, if all actions hitting a sort make its processes bounce at most one level away (e.g. if $a_1$ can bounce to $a_0$ or $a_2$ but not to $a_3$), then this sort is likely to correspond to a BRN component.
 
 Inferring global influences of a predecessor $b$ on a component $a$ requires to find “local influences” from this predecessor first, by considering a given state of the PH and changing only the active process of $b$.
 The aim is to compare the set of processes towards which the component $a$ will evolve, for each active process of $b$, leaving the active process of all the other sorts unchanged.
@@ -719,7 +729,7 @@ on a standard desktop computer.
 \section{Conclusion}
 
 This work establishes the abstraction relationship between PH, which is more abstract and allows incomplete knowledge on cooperations, and Thomas' approach for qualitative BRN modeling.
-This motivates the concretization of PH models into a set of compatible Thomas' models in order to benefit of the complementary advantages of these two formal frameworks and extract some global information about the influences between components.
+This motivates the concretization of PH models into a set of compatible Thomas' models in order to benefit from the complementary advantages of these two formal frameworks and extract some global information about the influences between components.
 
 As an extension of the present work, we plan to explore new semantics of BRNs to be able to tackle influences currently represented by unsigned edges.
 
